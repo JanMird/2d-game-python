@@ -9,6 +9,17 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 twidth = 30
 
+FPS = 30
+
+endefaultspeed = 5
+endefaultrectx = 100
+endefaultrecty = 100
+endefaulthealth = 5
+endefaultdir = 'right'
+
+enshootspeed = 15
+bulgenl = 5
+
 directions = ['left', 'right', 'up', 'down']
 
 class enemy(pygame.sprite.Sprite):
@@ -18,19 +29,19 @@ class enemy(pygame.sprite.Sprite):
         self.image = pygame.Surface((twidth, twidth))
         self.image.fill(WHITE)
         self.rect = self.image.get_rect()
-        self.speed = 5
-        self.oldx = 50
-        self.oldy = 50
-        self.rect.x = 50
-        self.rect.y = 50
+        self.speed = endefaultspeed
+        self.oldx = endefaultrectx
+        self.oldy = endefaultrecty
+        self.rect.x = endefaultrectx
+        self.rect.y = endefaultrecty
         self.direction = 'right'
-        self.health = 3
+        self.health = endefaulthealth
         self.cooldown = 0
         self.cooldown2 = 0
 
     def update(self):
         self.cooldown += 1
-        if self.cooldown > 29:
+        if self.cooldown > FPS:
             if self.direction == 'right':
                 self.direction = 'up'
             elif self.direction == 'up':
@@ -61,22 +72,22 @@ class enemy(pygame.sprite.Sprite):
         pass
 
     def shoot(self):
-        if self.cooldown2 > 15:
+        if self.cooldown2 > enshootspeed:
             self.cooldown2 = 0
             a = bullet()
             a.direction = self.direction
             if self.direction == 'right':
-                a.rect.x = self.rect.x + self.image.get_width() + 20
+                a.rect.x = self.rect.x + self.image.get_width() + bulgenl
                 a.rect.y = self.rect.y + self.image.get_height() // 2
             elif self.direction == 'left':
-                a.rect.x = self.rect.x - 20
+                a.rect.x = self.rect.x - bulgenl
                 a.rect.y = self.rect.y + self.image.get_height() // 2
             if self.direction == 'up':
                 a.rect.x = self.rect.x + self.image.get_width() // 2
-                a.rect.y = self.rect.y - 20
+                a.rect.y = self.rect.y - bulgenl
             if self.direction == 'down':
                 a.rect.x = self.rect.x + self.image.get_width() // 2
-                a.rect.y = self.rect.y + self.image.get_height() + 20
+                a.rect.y = self.rect.y + self.image.get_height() + bulgenl
             return a
         else:
             self.cooldown2 += 1

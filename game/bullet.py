@@ -7,6 +7,12 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 buwidth = 5
 
+buldefaultrectx = 0
+buldefaultrecty = 0
+buldefaultspeed = 9
+buldefaultdamage = 1
+buldefaultdir = 'right'
+
 
 class bullet(pygame.sprite.Sprite):
     def __init__(self):
@@ -15,11 +21,11 @@ class bullet(pygame.sprite.Sprite):
         self.image = pygame.Surface((buwidth, buwidth))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = 0
-        self.speed = 9
-        self.damage = 1
-        self.direction = 'right'
+        self.rect.x = buldefaultrectx
+        self.rect.y = buldefaultrecty
+        self.speed = buldefaultspeed
+        self.damage = buldefaultdamage
+        self.direction = buldefaultdir
 
     def update(self):
         if self.direction == 'right':
@@ -33,3 +39,4 @@ class bullet(pygame.sprite.Sprite):
 
     def hit(self):
         pass
+
