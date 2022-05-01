@@ -15,17 +15,20 @@ buldefaultdir = 'right'
 
 
 class bullet(pygame.sprite.Sprite):
-    def __init__(self):
-        self.type = 'bullet'
+    def __init__(self, type='bullet', width=buwidth, height=buwidth, \
+                 color=RED, x=buldefaultrectx, y=buldefaultrecty, \
+                 speed=buldefaultspeed, damege=buldefaultdamage, \
+                 dir=buldefaultdir):
+        self.type = type
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((buwidth, buwidth))
-        self.image.fill(RED)
+        self.image = pygame.Surface((width, height))
+        self.image.fill(color)
         self.rect = self.image.get_rect()
-        self.rect.x = buldefaultrectx
-        self.rect.y = buldefaultrecty
-        self.speed = buldefaultspeed
-        self.damage = buldefaultdamage
-        self.direction = buldefaultdir
+        self.rect.x = x
+        self.rect.y = y
+        self.speed = speed
+        self.damage = damege
+        self.direction = dir
 
     def update(self):
         if self.direction == 'right':
@@ -36,7 +39,4 @@ class bullet(pygame.sprite.Sprite):
             self.rect.y -= self.speed
         elif self.direction == 'down':
             self.rect.y += self.speed
-
-    def hit(self):
-        pass
 

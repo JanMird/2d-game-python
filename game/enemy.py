@@ -1,7 +1,6 @@
 import pygame
 from bullet import bullet
 
-
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -22,26 +21,30 @@ bulgenl = 5
 
 directions = ['left', 'right', 'up', 'down']
 
+
 class enemy(pygame.sprite.Sprite):
-    def __init__(self):
-        self.type = 'enemy'
+    def __init__(self, type='enemy', width=twidth, height=twidth, \
+                 color=WHITE, speed=endefaultspeed, x=endefaultrectx, \
+                 y=endefaultrecty, dir=endefaultdir, \
+                 health=endefaulthealth):
+        self.type = type
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((twidth, twidth))
-        self.image.fill(WHITE)
+        self.image = pygame.Surface((width, height))
+        self.image.fill(color)
         self.rect = self.image.get_rect()
-        self.speed = endefaultspeed
-        self.oldx = endefaultrectx
-        self.oldy = endefaultrecty
-        self.rect.x = endefaultrectx
-        self.rect.y = endefaultrecty
-        self.direction = 'right'
-        self.health = endefaulthealth
-        self.cooldown = 0
-        self.cooldown2 = 0
+        self.speed = speed
+        self.oldx = x
+        self.oldy = y
+        self.rect.x = x
+        self.rect.y = y
+        self.direction = dir
+        self.health = health
+        self.movecooldown = 0
+        self.shootcooldown = 0
 
     def update(self):
-        self.cooldown += 1
-        if self.cooldown > FPS:
+        self.movecooldown += 1
+        if self.movecooldown > FPS:
             if self.direction == 'right':
                 self.direction = 'up'
             elif self.direction == 'up':
@@ -50,7 +53,7 @@ class enemy(pygame.sprite.Sprite):
                 self.direction = 'down'
             elif self.direction == 'down':
                 self.direction = 'right'
-            self.cooldown = 0
+            self.movecooldown = 0
         self.oldx = self.rect.x
         self.oldy = self.rect.y
         if self.direction == 'right':
@@ -62,33 +65,25 @@ class enemy(pygame.sprite.Sprite):
         elif self.direction == 'down':
             self.rect.y += self.speed
 
-    def ishot(self, bullet):
-        pass
-
-    def die(self):
-        pass
-
-    def isalive(self):
-        pass
-
-    def shoot(self):
-        if self.cooldown2 > enshootspeed:
-            self.cooldown2 = 0
+    def shoot(self, len=bulgenl):
+        if self.shootcooldown > enshootspeed:
+            self.shootcooldown = 0
             a = bullet()
             a.direction = self.direction
             if self.direction == 'right':
-                a.rect.x = self.rect.x + self.image.get_width() + bulgenl
+                a.rect.x = self.rect.x + self.image.get_width() + len
                 a.rect.y = self.rect.y + self.image.get_height() // 2
             elif self.direction == 'left':
-                a.rect.x = self.rect.x - bulgenl
+                a.rect.x = self.rect.x - len
                 a.rect.y = self.rect.y + self.image.get_height() // 2
             if self.direction == 'up':
                 a.rect.x = self.rect.x + self.image.get_width() // 2
-                a.rect.y = self.rect.y - bulgenl
+                a.rect.y = self.rect.y - len
             if self.direction == 'down':
                 a.rect.x = self.rect.x + self.image.get_width() // 2
-                a.rect.y = self.rect.y + self.image.get_height() + bulgenl
+                a.rect.y = self.rect.y + self.image.get_height() + len
             return a
         else:
-            self.cooldown2 += 1
+            self.shootcooldown += 1
             return None
+
