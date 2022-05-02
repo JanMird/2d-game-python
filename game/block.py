@@ -13,10 +13,10 @@ bldefaulthealth = 1
 
 
 class block(pygame.sprite.Sprite):
-    def __init__(self, width=blwidth, height=blwidth, color=BLUE, \
-                 x=bldefaultrectx, y=bldefaultrecty, \
+    def __init__(self, type='block', width=blwidth, height=blwidth, \
+                 color=BLUE, x=bldefaultrectx, y=bldefaultrecty, \
                  health=bldefaulthealth):
-        self.type = 'block'
+        self.type = type
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
         self.image.fill(color)

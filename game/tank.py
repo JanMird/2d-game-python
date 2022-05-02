@@ -47,9 +47,6 @@ class tank(pygame.sprite.Sprite):
         elif self.direction == 'down':
             self.rect.y += self.speed
 
-    def drawinterface(self):
-        pass
-
     def shoot(self, len=bulgenl):
         a = bullet()
         a.direction = self.direction

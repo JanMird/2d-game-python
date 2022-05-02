@@ -2,6 +2,8 @@ import pygame
 from tank import tank
 from block import block
 from enemy import enemy
+from button import button
+import time
 
 from random import randint
 
@@ -21,8 +23,94 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("tanks")
 clock = pygame.time.Clock()
 
+smalltextsize = 34
+bigtextsize = 68
+defaulinterx = 350
+defaulintery = 30
+defaultintercol = RED
+interspace = 30
+
 
 def game():
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+
+    startblockem = 200
+    blockgencooldown = FPS * 15
+    blockgentick = 0
+    blockgennum = 10
+    blockgenincr = 1
+    startenemyem = 3
+    enemygencooldown = FPS * 15
+    enemygentick = 0
+    enemygennum = startenemyem + 1
+    enemygenincr = 1
+
+    smalltextsize = 34
+    bigtextsize = 68
+    defaulinterx = 350
+    defaulintery = 30
+    defaultintercol = RED
+    interspace = 30
+
+    smalltextsize = 34
+    bigtextsize = 68
+    defaulinterx = 350
+    defaulintery = 30
+    defaultintercol = RED
+    interspace = 30
+
+    def drawstats(obj, textstr='default text', color=defaultintercol, \
+                  x=defaulinterx, y=defaulintery, size=smalltextsize, \
+                  screen=screen, time=0):
+        textstr = 'HEALTH : ' + str(obj.health)
+        st = pygame.font.SysFont('impact', size)
+        text = st.render(textstr, True, color)
+        text_rect = text.get_rect()
+        text_rect.center = (x, y)
+        screen.blit(text, text_rect)
+        textstr2 = 'TIME : ' + str(time)
+        st = pygame.font.SysFont('impact', size)
+        text2 = st.render(textstr2, True, color)
+        text_rect2 = text.get_rect()
+        text_rect2.center = (x + text_rect.width + interspace, y)
+        screen.blit(text2, text_rect2)
+
+    def blockgen(n):
+        for _ in range(n):
+            while True:
+                x = randint(0, screen.get_width() // blockwidth - 1) * blockwidth
+                y = randint(3, screen.get_height() // blockwidth - 1) * blockwidth
+                check = pygame.Rect(x, y, blockwidth, blockwidth)
+                k = 0
+                for i in all_sprites:
+                    if check.colliderect(i.rect):
+                        k = 1
+                if k == 0:
+                    break
+            a = block(x=x, y=y)
+            all_sprites.add(a)
+            block_sprites.add(a)
+
+    def enemygen(n):
+        for _ in range(n):
+            while True:
+                x = randint(0, screen.get_width() // blockwidth - 1) * blockwidth
+                y = randint(3, screen.get_height() // blockwidth - 1) * blockwidth
+                check = pygame.Rect(x, y, blockwidth, blockwidth)
+                k = 0
+                for i in all_sprites:
+                    if check.colliderect(i.rect):
+                        k = 1
+                if k == 0:
+                    break
+            a = enemy(x=x, y=y)
+            all_sprites.add(a)
+            enemy_sprites.add(a)
+
     forblockwidth = block()
     blockwidth = forblockwidth.rect.width
 
@@ -31,6 +119,7 @@ def game():
     bullet_sprites = pygame.sprite.Group()
     block_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
+    bord_sprites = pygame.sprite.Group()
 
     tanka = tank()
     tanka.rect.x = 100
@@ -38,46 +127,37 @@ def game():
     all_sprites.add(tanka)
     tank_sprites.add(tanka)
 
-    enemya = enemy()
-    enemya.rect.x = 300
-    enemya.rect.y = 300
-    all_sprites.add(enemya)
-    enemy_sprites.add(enemya)
+    enemygen(startenemyem)
 
-    enemyb = enemy()
-    enemyb.rect.x = 550
-    enemyb.rect.y = 550
-    all_sprites.add(enemyb)
-    enemy_sprites.add(enemyb)
+    borderwidth = 10
+    borderheight = HEIGHT - blockwidth
 
-    enemyc = enemy()
-    enemyc.rect.x = 600
-    enemyc.rect.y = 300
-    all_sprites.add(enemyc)
-    enemy_sprites.add(enemyc)
+    leftbord = block(x=0, y=blockwidth * 3, width=borderwidth, \
+                     height=borderheight, color=RED)
+    leftbord.type = 'border'
+    all_sprites.add(leftbord)
+    bord_sprites.add(leftbord)
 
-    enemyd = enemy()
-    enemyd.rect.x = 300
-    enemyd.rect.y = 600
-    all_sprites.add(enemyd)
-    enemy_sprites.add(enemyd)
+    rightbord = block(x=WIDTH - borderwidth, y=blockwidth * 3, \
+                      width=borderwidth, \
+                      height=borderheight, color=RED)
+    rightbord.type = 'border'
+    all_sprites.add(rightbord)
+    bord_sprites.add(rightbord)
 
-    for _ in range(200):
-        while True:
-            x = randint(0, screen.get_width() // blockwidth - 1) * blockwidth
-            y = randint(3, screen.get_height() // blockwidth - 1) * blockwidth
-            check = pygame.Rect(x, y, blockwidth, blockwidth)
-            k = 0
-            for i in all_sprites:
-                if check.colliderect(i.rect):
-                    k = 1
-            if k == 0:
-                break
-        a = block()
-        a.rect.x = x
-        a.rect.y = y
-        all_sprites.add(a)
-        block_sprites.add(a)
+    topbord = block(x=0, y=blockwidth * 3 - borderwidth, width=WIDTH, \
+                    height=borderwidth, color=RED)
+    topbord.type = 'border'
+    all_sprites.add(topbord)
+    bord_sprites.add(topbord)
+
+    bottbord = block(x=0, y=HEIGHT - borderwidth, width=WIDTH, \
+                     height=borderwidth, color=RED)
+    bottbord.type = 'border'
+    all_sprites.add(bottbord)
+    bord_sprites.add(bottbord)
+
+    blockgen(startblockem)
 
     keypressedup = False
     keypresseddown = False
@@ -85,119 +165,104 @@ def game():
     keypressedright = False
     pressedkeys = 0
 
+    starttime = time.time()
+
+    aliveflag = 1
+    score = 0
     running = True
     while running:
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return 'exit'
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    k = tanka.shoot()
-                    all_sprites.add(k)
-                    bullet_sprites.add(k)
-                if event.key == pygame.K_LEFT:
-                    keypressedleft = True
-                    pressedkeys += 1
-                    tanka.direction = 'left'
-                elif event.key == pygame.K_RIGHT:
-                    keypressedright = True
-                    pressedkeys += 1
-                    tanka.direction = 'right'
-                elif event.key == pygame.K_DOWN:
-                    keypresseddown = True
-                    pressedkeys += 1
-                    tanka.direction = 'down'
-                elif event.key == pygame.K_UP:
-                    pressedkeys += 1
-                    keypressedup = True
-                    tanka.direction = 'up'
-            elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    keypressedleft = False
-                elif event.key == pygame.K_RIGHT:
-                    keypressedright = False
-                elif event.key == pygame.K_DOWN:
-                    keypresseddown = False
-                elif event.key == pygame.K_UP:
-                    keypressedup = False
-                pressedkeys -= 1
-                if pressedkeys != 0:
-                    if keypresseddown:
-                        tanka.direction = 'down'
-                    elif keypressedup:
-                        tanka.direction = 'up'
-                    elif keypressedright:
-                        tanka.direction = 'right'
-                    elif keypressedleft:
+            if aliveflag == 1:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        k = tanka.shoot()
+                        all_sprites.add(k)
+                        bullet_sprites.add(k)
+                    if event.key == pygame.K_LEFT:
+                        keypressedleft = True
+                        pressedkeys += 1
                         tanka.direction = 'left'
+                    elif event.key == pygame.K_RIGHT:
+                        keypressedright = True
+                        pressedkeys += 1
+                        tanka.direction = 'right'
+                    elif event.key == pygame.K_DOWN:
+                        keypresseddown = True
+                        pressedkeys += 1
+                        tanka.direction = 'down'
+                    elif event.key == pygame.K_UP:
+                        pressedkeys += 1
+                        keypressedup = True
+                        tanka.direction = 'up'
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_LEFT:
+                        keypressedleft = False
+                    elif event.key == pygame.K_RIGHT:
+                        keypressedright = False
+                    elif event.key == pygame.K_DOWN:
+                        keypresseddown = False
+                    elif event.key == pygame.K_UP:
+                        keypressedup = False
+                    pressedkeys -= 1
+                    if pressedkeys != 0:
+                        if keypresseddown:
+                            tanka.direction = 'down'
+                        elif keypressedup:
+                            tanka.direction = 'up'
+                        elif keypressedright:
+                            tanka.direction = 'right'
+                        elif keypressedleft:
+                            tanka.direction = 'left'
+            else:
+                if event.type == pygame.KEYDOWN or \
+                        event.type == pygame.MOUSEBUTTONDOWN:
+                    return 'defeat'
 
         for i in all_sprites:
             if i.type == 'tank':
-                if keypresseddown or keypressedup or keypressedleft or keypressedright:
+                if keypresseddown or keypressedup or keypressedleft \
+                        or keypressedright:
                     i.update()
-                    for j in block_sprites:
-                        if j.rect.colliderect(i.rect):
-                            i.rect.x = i.oldx
-                            i.rect.y = i.oldy
-                            break
-                    for j in enemy_sprites:
-                        if j.rect.colliderect(i.rect):
-                            i.rect.x = i.oldx
-                            i.rect.y = i.oldy
-                            break
+                    for j in all_sprites:
+                        if j.type == 'block' or j.type == 'enemy' \
+                                or j.type == 'border':
+                            if j.rect.colliderect(i.rect):
+                                i.rect.x = i.oldx
+                                i.rect.y = i.oldy
+                                break
 
             if i.type == 'bullet':
-                buldied = 0
                 i.update()
-                if i.rect.x > screen.get_width() or i.rect.x + i.rect.width < 0 \
-                        or i.rect.y > screen.get_height() or i.rect.y + i.rect.height < 0:
+                if i.rect.x > screen.get_width() or \
+                        i.rect.x + i.rect.width < 0 or \
+                        i.rect.y > screen.get_height() or \
+                        i.rect.y + i.rect.height < 0:
                     all_sprites.remove(i)
                     bullet_sprites.remove(i)
                 else:
-                    for j in block_sprites:
-                        if j.rect.colliderect(i.rect):
-                            all_sprites.remove(i)
-                            bullet_sprites.remove(i)
-                            j.health -= i.damage
-                            buldied = 1
-                            break
-                    if buldied == 0:
-                        for j in enemy_sprites:
+                    for j in all_sprites:
+                        if j.type == 'block' or j.type == 'enemy' \
+                                or j.type == 'tank':
                             if j.rect.colliderect(i.rect):
                                 all_sprites.remove(i)
                                 bullet_sprites.remove(i)
                                 j.health -= i.damage
-                                buldied = 1
-                                break
-                    if buldied == 0:
-                        for j in tank_sprites:
-                            if j.rect.colliderect(i.rect):
-                                all_sprites.remove(i)
-                                bullet_sprites.remove(i)
-                                j.health -= i.damage
-                                buldied = 1
                                 break
 
             if i.type == 'enemy':
                 i.update()
-                for j in block_sprites:
-                    if j.rect.colliderect(i.rect):
-                        i.rect.x = i.oldx
-                        i.rect.y = i.oldy
-                        break
-                for j in tank_sprites:
-                    if j.rect.colliderect(i.rect):
-                        i.rect.x = i.oldx
-                        i.rect.y = i.oldy
-                        break
-                for j in enemy_sprites:
-                    if j.rect.colliderect(i.rect) and j != i:
-                        i.rect.x = i.oldx
-                        i.rect.y = i.oldy
-                        break
+                for j in all_sprites:
+                    if j.type == 'tank' or j.type == 'block' or \
+                            j.type == 'border' or j.type == 'enemy':
+                        if j.rect.colliderect(i.rect) and i is not j:
+                            i.rect.x = i.oldx
+                            i.rect.y = i.oldy
+                            break
                 bul = i.shoot()
-                if bul != None:
+                if bul is not None:
                     all_sprites.add(bul)
                     bullet_sprites.add(bul)
         for i in all_sprites:
@@ -210,66 +275,45 @@ def game():
                         enemy_sprites.remove(i)
                     elif i.type == 'tank':
                         tank_sprites.remove(i)
+
         if len(tank_sprites) == 0:
-            return 'defeat'
-        if len(enemy_sprites) == 0:
-            return 'victory'
+            aliveflag = 0
+
+        blockgentick += 1
+        if blockgentick >= blockgencooldown:
+            blockgen(blockgennum)
+            blockgennum += blockgenincr
+            blockgentick = 0
+            for i in tank_sprites:
+                i.health += 1
+
+        enemygentick += 1
+        if enemygentick >= enemygencooldown:
+            enemygen(enemygennum)
+            enemygennum += enemygenincr
+            enemygentick = 0
 
         screen.fill(BLACK)
         all_sprites.draw(screen)
-        pygame.display.flip()
-
-
-button_width = 350
-button_height = 65
-
-
-class button():
-    def __init__(self, text, x, y, tsize=50, tcol=BLUE, bg=GREEN, type=None):
-        self.type = type
-        self.font = pygame.font.SysFont("impact", tsize)
-        self.text = self.font.render(text, True, tcol)
-        self.text_rect = self.text.get_rect()
-        self.but_rect = self.text.get_rect()
-        self.but_rect.width = button_width
-        self.but_rect.height = button_height
-        self.text_rect.center = (x, y)
-        self.but_rect.center = (x, y)
-        self.state = 0
-        self.clicked = 0
-        self.rect_col = bg
-
-    def change_but(self, text='txt not stated', tcol=GREEN, bg=BLUE):
-        self.text = self.font.render(text, True, tcol)
-        self.text_rect = self.text.get_rect()
-        self.text_rect.center = self.but_rect.center
-        self.rect_col = bg
-
-    def show(self):
-        pygame.draw.rect(screen, self.rect_col, self.but_rect)
-        screen.blit(self.text, self.text_rect)
-
-    def update(self, text1='movedon', text2='default', tcol=GREEN, bg=RED):
-        x, y = pygame.mouse.get_pos()
-        if self.state == 0:
-            if x <= self.but_rect.x + self.but_rect.width and x >= self.but_rect.x \
-                    and y <= self.but_rect.y + self.but_rect.height \
-                    and y >= self.but_rect.y:
-                self.change_but(text1, tcol, bg)
-                self.state = 1
-        if self.state == 1:
-            if x < self.but_rect.x or x > self.but_rect.x + self.but_rect.width \
-                    or y < self.but_rect.y or y > self.but_rect.y + self.but_rect.height:
-                self.change_but(text2, tcol=BLUE, bg=GREEN)
-                self.state = 0
-
-    def ismouseon(self, pos):
-        if pos[0] <= self.but_rect.x + self.but_rect.width and pos[0] >= self.but_rect.x \
-                and pos[1] <= self.but_rect.y + self.but_rect.height \
-                and pos[1] >= self.but_rect.y:
-            return 1
+        if aliveflag == 1:
+            for i in tank_sprites:
+                score = ((time.time() - starttime) * 10 // 1 / 10)
+                drawstats(obj=i, time=score)
         else:
-            return 0
+            textstr = 'SCORE IS ' + str(score)
+            st = pygame.font.SysFont('impact', bigtextsize)
+            text = st.render(textstr, True, GREEN)
+            text_rect = text.get_rect()
+            text_rect.center = (WIDTH // 2, HEIGHT // 2)
+            screen.blit(text, text_rect)
+            textstr = 'Press any button'
+            st = pygame.font.SysFont('impact', bigtextsize)
+            text = st.render(textstr, True, GREEN)
+            text_rect = text.get_rect()
+            text_rect.center = (WIDTH // 2, HEIGHT // 2 + bigtextsize * 2)
+            screen.blit(text, text_rect)
+
+        pygame.display.flip()
 
 
 def mainmanu():
@@ -299,8 +343,8 @@ def mainmanu():
 
         screen.fill(BLACK)
         for i in buttons:
-            i.update(text2=i.type)
-            i.show()
+            i.update(text1=i.type, text2=i.type)
+            i.show(screen=screen)
         pygame.display.update()
 
 

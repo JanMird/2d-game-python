@@ -13,7 +13,7 @@ FPS = 30
 endefaultspeed = 5
 endefaultrectx = 100
 endefaultrecty = 100
-endefaulthealth = 5
+endefaulthealth = 3
 endefaultdir = 'right'
 
 enshootspeed = 15
