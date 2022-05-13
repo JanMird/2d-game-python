@@ -1,27 +1,15 @@
 import pygame
-from bullet import bullet
-
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-twidth = 30
-
-tdefaultspeed = 5
-tdefaultrectx = 100
-tdefaultrecty = 100
-tdefaulthealth = 3
-tdefaultdir = 'right'
-
-bulgenl = 5
+from src.bullet import bullet
+from src.Globals import HTANKWIDTH, HTANKCOL, HTANKSPEED, HTANKDX, \
+    HTANKDY, HTANKDDIR, HTANKDHEALTH, TBULGEN 
 
 
 class tank(pygame.sprite.Sprite):
-    def __init__(self, type='tank', width=twidth, height=twidth, \
-                 color=GREEN, speed=tdefaultspeed, x=tdefaultrectx, \
-                 y=tdefaultrecty, direction=tdefaultdir, \
-                 health=tdefaulthealth):
+    def __init__(self, type='tank', width=HTANKWIDTH, \
+                 height=HTANKWIDTH, color=HTANKCOL, \
+                 speed=HTANKSPEED, x=HTANKDX, \
+                 y=HTANKDY, direction=HTANKDDIR, \
+                 health=HTANKDHEALTH):
         self.type = type
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
@@ -47,7 +35,7 @@ class tank(pygame.sprite.Sprite):
         elif self.direction == 'down':
             self.rect.y += self.speed
 
-    def shoot(self, len=bulgenl):
+    def shoot(self, len=TBULGEN):
         a = bullet()
         a.direction = self.direction
         if self.direction == 'right':

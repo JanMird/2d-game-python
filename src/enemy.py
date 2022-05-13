@@ -1,32 +1,15 @@
 import pygame
-from bullet import bullet
-
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-twidth = 30
-
-FPS = 30
-
-endefaultspeed = 5
-endefaultrectx = 100
-endefaultrecty = 100
-endefaulthealth = 3
-endefaultdir = 'right'
-
-enshootspeed = 15
-bulgenl = 5
-
-directions = ['left', 'right', 'up', 'down']
+from src.bullet import bullet
+from src.Globals import ENTWIDTH, ENTWIDTH, ENEMYCOL, ENDEFAULTSPEED, \
+    ENDEFAULTRECTX, ENDEFAULTRECTY, ENDEFAULTDIR, ENDEFAULTHEALTH, \
+    TURNFREQ, SHOOTFREQ, ENBULGEN
 
 
 class enemy(pygame.sprite.Sprite):
-    def __init__(self, type='enemy', width=twidth, height=twidth, \
-                 color=WHITE, speed=endefaultspeed, x=endefaultrectx, \
-                 y=endefaultrecty, dir=endefaultdir, \
-                 health=endefaulthealth):
+    def __init__(self, type='enemy', width=ENTWIDTH, height=ENTWIDTH, \
+                 color=ENEMYCOL, speed=ENDEFAULTSPEED, x=ENDEFAULTRECTX, \
+                 y=ENDEFAULTRECTY, dir=ENDEFAULTDIR, \
+                 health=ENDEFAULTHEALTH, turnfr=TURNFREQ, shootfr=SHOOTFREQ):
         self.type = type
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
@@ -39,12 +22,14 @@ class enemy(pygame.sprite.Sprite):
         self.rect.y = y
         self.direction = dir
         self.health = health
+        self.turnfr = turnfr
         self.movecooldown = 0
+        self.shootfr = shootfr
         self.shootcooldown = 0
 
     def update(self):
         self.movecooldown += 1
-        if self.movecooldown > FPS:
+        if self.movecooldown > self.turnfr:
             if self.direction == 'right':
                 self.direction = 'up'
             elif self.direction == 'up':
@@ -65,8 +50,7 @@ class enemy(pygame.sprite.Sprite):
         elif self.direction == 'down':
             self.rect.y += self.speed
 
-    def shoot(self, len=bulgenl):
-        if self.shootcooldown > enshootspeed:
+    def shoot(self, len=ENBULGEN):
             self.shootcooldown = 0
             a = bullet()
             a.direction = self.direction
@@ -83,7 +67,4 @@ class enemy(pygame.sprite.Sprite):
                 a.rect.x = self.rect.x + self.image.get_width() // 2
                 a.rect.y = self.rect.y + self.image.get_height() + len
             return a
-        else:
-            self.shootcooldown += 1
-            return None
 

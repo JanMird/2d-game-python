@@ -1,24 +1,16 @@
 import pygame
-
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-buwidth = 5
-
-buldefaultrectx = 0
-buldefaultrecty = 0
-buldefaultspeed = 9
-buldefaultdamage = 1
-buldefaultdir = 'right'
+from src.Globals import BUWIDTH, BULCOL, BULDEFAULTRECTX, \
+    BULDEFAULTRECTY, BULDEFAULTSPEED, BULDEFAULTDAMAGE, BULDEFAULTDIR
 
 
 class bullet(pygame.sprite.Sprite):
-    def __init__(self, type='bullet', width=buwidth, height=buwidth, \
-                 color=RED, x=buldefaultrectx, y=buldefaultrecty, \
-                 speed=buldefaultspeed, damege=buldefaultdamage, \
-                 dir=buldefaultdir):
+    def __init__(self, type='bullet', width=BUWIDTH, \
+                 height=BUWIDTH, color=BULCOL, \
+                 x=BULDEFAULTRECTX, \
+                 y=BULDEFAULTRECTY, \
+                 speed=BULDEFAULTSPEED, \
+                 damege=BULDEFAULTDAMAGE, \
+                 dir=BULDEFAULTDIR):
         self.type = type
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
