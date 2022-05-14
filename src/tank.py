@@ -1,15 +1,70 @@
 import pygame
 from src.bullet import bullet
 from src.Globals import HTANKWIDTH, HTANKCOL, HTANKSPEED, HTANKDX, \
-    HTANKDY, HTANKDDIR, HTANKDHEALTH, TBULGEN 
+    HTANKDY, HTANKDDIR, HTANKDHEALTH, TBULGEN
 
 
 class tank(pygame.sprite.Sprite):
+    """
+    A class to represent main object of the game - Hero tank.
+
+    Attributes
+    ----------
+    type : str
+	Object type
+    image : pygame.Surface
+        Hero picture
+    rect : pygame.rect
+        Hero rectangle
+    speed : int
+        Hero move speed
+    oldx : int
+        X coordinate of hero tank before tick
+    oldy : int
+        Y coordinate of hero tank before tick
+    direction : string
+        Tank move direction
+    health : int
+        Hero tank lives
+
+    Methods
+    -------
+    init(self):
+        Create class object.
+    update(self):
+        Implements tanks movement
+    shoot(self, len=TBULGEN):
+        Implements tank shooting, retuns bullet
+
+    """
+
     def __init__(self, type='tank', width=HTANKWIDTH, \
                  height=HTANKWIDTH, color=HTANKCOL, \
                  speed=HTANKSPEED, x=HTANKDX, \
                  y=HTANKDY, direction=HTANKDDIR, \
                  health=HTANKDHEALTH):
+        """
+        Constructs all the necessary attributes for the tank object.
+
+        Parameters
+        ----------
+            type : string
+                Type object
+	    width, height : int, int
+		Size of tank surface
+	    color : RGB
+		Hero tank color
+	    speed : int
+		Hero move speed
+	    x : int
+		X coordinate of hero tank
+	    y : int
+		Y coordinate of hero tank
+	    direction : string
+		Move direction
+	    health : int
+		Hero tank lives
+        """
         self.type = type
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((width, height))
@@ -24,6 +79,17 @@ class tank(pygame.sprite.Sprite):
         self.health = health
 
     def update(self):
+        """
+        Implements tank movement.
+
+        Parameters
+        ----------
+        Self
+
+        Returns
+        -------
+        None
+        """
         self.oldx = self.rect.x
         self.oldy = self.rect.y
         if self.direction == 'right':
@@ -36,6 +102,19 @@ class tank(pygame.sprite.Sprite):
             self.rect.y += self.speed
 
     def shoot(self, len=TBULGEN):
+        """
+        Implements tank shooting, retuns bullet.
+
+        Parameters
+        ----------
+        Self
+        len : int
+            Lenght from tank to generate bullet
+
+        Returns
+        -------
+        bullet
+        """
         a = bullet()
         a.direction = self.direction
         if self.direction == 'right':
