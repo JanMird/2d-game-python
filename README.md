@@ -77,4 +77,22 @@ FAQ
     Q: I killed every enemy tanks, but nothing happening. Does that mean that i won?
     
     A: No, it doesent. This game has increasing difficulty level. Every 15 seconds more enemy tanks will be generated.
+    
+PATTERNS
+--------
+ **CREATIONAL PATTERNS**
+ 
+ Factory Method
+          В библиотеке pygame есть очень удобный класс Sprite. В нём реализованы многие методы, которых почти достаточно для каждого объекта игры. И писать реализацию для каждого класса было бы иррационально.
+ 
+ **STRUCTURAL PATTERNS**
+ 
+ Bridge
+         На каждом тике игры требуется обнавлять состояния объектов. Куда удобнее реализовывать обновление параметров, которые имеются у разных классов, в одном цикле. Например метод update класса sprite библиотеки pygame.
+ 
+ **BEHAVIORAL PATTERNS**
+ 
+ Observer
+         Есть класс bullet. Для остальных объектов очень важно, где находится объект данного класса каждый тик, а каждый тик он меняет своё местоположение. Так что отлично подойдёт класс observer для прохода по всем спрайтам, кроме пули, и сообщения её нового состояния. Аналогично для сталкивания танков.
+
 
