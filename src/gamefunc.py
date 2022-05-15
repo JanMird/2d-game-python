@@ -17,6 +17,20 @@ clock = pygame.time.Clock()
 def drawstats(obj, color=src.Globals.DEFAULINTERCOL, \
               x=src.Globals.DEFAULINTERX, y=src.Globals.DEFAULINTERY, size=src.Globals.SMALLTEXTSIZE, \
               screen=screen, time=0, space=src.Globals.INTERSPACE):
+    '''
+    Draws objects health and alive time.
+            Parameters:
+                    obj (tank) : class object (tank, for the game)
+                    color (RGB) : text color
+                    x (int) : x coordinate for interface
+                    y (int) : y coordinate for interface
+                    size (int) : text size
+                    screen (pygame.screen) : screen to draw interface
+                    time (time) : alive time
+                    space (int) : space between health and time
+            Returns:
+                    None
+    '''
     textstr = 'HEALTH : ' + str(obj.health)
     st = pygame.font.SysFont('impact', size)
     text = st.render(textstr, True, color)
@@ -32,6 +46,15 @@ def drawstats(obj, color=src.Globals.DEFAULINTERCOL, \
 
 
 def blockgen(n, all_sprites, block_sprites):
+    '''
+    Generates block objects and adds them to sprite lists.
+            Parameters:
+                    n (int) : amount of blocks
+                    all_sprites (pygame.spryte) : contains all sprytes 
+                    block_sprites (pygame.spryte) : contains block sprytes
+            Returns:
+                    None
+    '''
     for _ in range(n):
         while True:
             x = randint(1, screen.get_width() // src.Globals.BLWIDTH - 1) * src.Globals.BLWIDTH
@@ -49,6 +72,15 @@ def blockgen(n, all_sprites, block_sprites):
 
 
 def enemygen(n, all_sprites, enemy_sprites):
+    '''
+    Generates enemy objects and adds them to sprite lists.
+            Parameters:
+                    n (int) : amount of enemies
+                    all_sprites (pygame.spryte) : contains all sprytes 
+                    enemy_sprites (pygame.spryte) : contains enemy sprytes
+            Returns:
+                    None
+    '''
     for _ in range(n):
         while True:
             x = randint(1, screen.get_width() // src.Globals.ENTWIDTH - 1) * src.Globals.ENTWIDTH
@@ -66,6 +98,16 @@ def enemygen(n, all_sprites, enemy_sprites):
 
 
 def herocreate(all_sprites, tank_sprites, x=src.Globals.HEROX, y=src.Globals.HEROY):
+    '''
+    Generates hero tank and adds it to sprite lists.
+            Parameters:
+                    all_sprites (pygame.spryte) : contains all sprytes 
+                    tank_sprites (pygame.spryte) : contains tank sprytes
+                    x (int) : x coordinate
+                    y (int) y coordinate
+            Returns:
+                    None
+    '''
     tanka = tank()
     tanka.rect.x = x
     tanka.rect.y = y
@@ -75,12 +117,29 @@ def herocreate(all_sprites, tank_sprites, x=src.Globals.HEROX, y=src.Globals.HER
 
 
 def bulgen(obj, all_sprites, bullet_sprites):
+    '''
+    Generates bullet object and adds it to sprite lists.
+            Parameters:
+                    obj (tank/enemy) : object that can generate a bullet object
+                    all_sprites (pygame.spryte) : contains all sprytes 
+                    bullet_sprites (pygame.spryte) : contains bullet sprytes
+            Returns:
+                    None
+    '''
     k = obj.shoot()
     all_sprites.add(k)
     bullet_sprites.add(k)
 
 
 def bordercreate(all_sprites, bord_sprites):
+    '''
+    Generates undestroyable block objects and adds them to sprite lists.
+            Parameters:
+                    all_sprites (pygame.spryte) : contains all sprytes 
+                    bord_sprites (pygame.spryte) : contains border sprytes
+            Returns:
+                    None
+    '''
     leftbord = block(x=0, y=src.Globals.BLWIDTH * 3, width=src.Globals.BORDERWIDTH, \
                      height=src.Globals.BORDERHEIGHT, color=src.Globals.BORDCOL)
     leftbord.type = 'border'
@@ -108,6 +167,16 @@ def bordercreate(all_sprites, bord_sprites):
 
 
 def keypressedreact(r, l, u, d):
+    '''
+    Shows reaction un pressed key.
+            Parameters:
+                    r (int) : right button pressed flag
+                    l (int) : left button pressed flag
+                    u (int) : up button pressed flag
+                    d (int) : down button pressed flag
+            Returns:
+                    Direction after reaction as a string.
+    '''
     if d:
         return 'down'
     elif u:
@@ -119,6 +188,14 @@ def keypressedreact(r, l, u, d):
 
 
 def deathscreen(score, screen):
+    '''
+    Draws deathscreen after hero tank died.
+            Parameters:
+                    score (time) : hero tank alive time
+                    screen (pygema.screen) : screen where to draw
+            Returns:
+                    None
+    '''
     textstr = 'YOUR SCORE IS ' + str(score)
     st = pygame.font.SysFont('impact', src.Globals.BIGTEXTSIZE)
     text = st.render(textstr, True, src.Globals.GREEN)
@@ -134,6 +211,13 @@ def deathscreen(score, screen):
 
 
 def game():
+    '''
+    Implements game cycle.
+            Parameters:
+                    None
+            Returns:
+                    EXit code
+    '''
     blockgentick = 0
     blockgennum = 10
     enemygentick = 0
@@ -300,6 +384,13 @@ def game():
 
 
 def mainmanu():
+    '''
+    Main menu cycle.
+            Parameters:
+                    None
+            Returns:
+                    Exit code
+    '''
     buttons = []
     button1 = button(text='start', x=400, y=300, textsize=50, \
                      tcol=src.Globals.BLUE, bg=src.Globals.GREEN, type='start')
@@ -338,6 +429,13 @@ def mainmanu():
 
 
 def activecycle():
+    '''
+    App cycle.
+            Parameters:
+                    None
+            Returns:
+                    None
+    '''
     running = True
     while running:
         res = mainmanu()
